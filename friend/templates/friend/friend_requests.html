@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+{% if user_fr %}
+    <h2>These are your friend request</h2>
+    {% for friend_request in user_fr %}
+        {{friend_request.from_user}} <br>
+        <a href="{% url 'accept-request' friend_request.id %}">Accept</a>
+        <span>   
+            <a href="{% url 'reject-request' friend_request.id %}">Reject</a></span>
+        <br>
+    {% endfor %}
+{% else%}
+<p>No friend requests Exist</p>
+{% endif %}
+{% endblock content %}

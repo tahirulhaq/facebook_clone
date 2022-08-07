@@ -1,0 +1,38 @@
+.navbar-fb{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0; 
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center;
+    background: white;
+}
+.container-fb{
+    margin-top: 25px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+}
+
+.left-section{
+    margin-left: 40px;
+    position: fixed;
+    left: 0;
+    top: 100px;
+}
+
+.blog-section{
+    width: 60%;
+    margin: auto;
+}
+.right-section{
+    margin-right: 40px;
+    position: fixed;
+    right: 0;
+    top: 100px;
+}
+
+.sticky-fb{
+    position: -webkit-sticky;
+    position: sticky;
+}

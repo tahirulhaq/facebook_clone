@@ -1,0 +1,17 @@
+<form method="post" id="like-section{{post.id}}">
+    <p>{{post.total_likes}} Like{{post.total_likes | pluralize}}</p>
+    {% csrf_token %}
+    {% if user in post.likes.all %}
+    <button type="submit" id="like" name="post_id" value="{{post.id}}" class="btn btn-danger">Dislike</button>
+    {%else%}
+    <button type="submit" id="like" name="post_id" value="{{post.id}}" class="btn btn-primary">Like</button>
+    {%endif%}
+    {% if request.user == post.author %}
+    <span>
+
+        <!-- <a href="{% url 'update-post' post.id %}">Edit</a> -->
+        <a href="{% url 'delete-post' post.id %}">Delete</a>
+        <a style="color: #007bff;" onclick="openEdit('{{post.id}}')">Edit</a>
+    </span>
+    {% endif %}
+</form>

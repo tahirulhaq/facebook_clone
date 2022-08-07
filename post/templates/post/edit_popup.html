@@ -1,0 +1,106 @@
+<style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+  
+    * {
+      box-sizing: border-box;
+    }
+  
+    /* The popup form - hidden by default */
+    .form-popup-edit {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 428px;
+      border: 3px solid #f1f1f1;
+      z-index: 1;
+      background-color: white;
+    }
+  
+    /* Add styles to the form container */
+    .form-container {
+      width: 100%;
+      padding: 10px;
+      background-color: white;
+      position: relative;
+    }
+  
+    /* Full-width input fields */
+    .form-container input[type=text],
+    .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+  
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus,
+    .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+  
+    /* Set a style for the submit/login button */
+    .form-container .btn1 {
+      color: white;
+      padding: 16px 20px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      width: 100%;
+      opacity: 0.8;
+      display: inline-block;
+      font-weight: 400;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 0.25rem;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+  
+    /* Add a red background color to the cancel button */
+    .form-container .cancel {
+      background-color: red;
+    }
+  
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover,
+    .open-button:hover {
+      opacity: 1;
+    }
+  </style>
+  
+  <!-- <a class="open-button" onclick="openEdit('{{post.id}}')">Edit</a>
+   -->
+  <div class="form-popup-edit" id="myEditForm-{{post.id}}">
+    <form action="{% url 'update-post' post.id %}" method="post" class="form-container">
+      {% csrf_token %}
+      <h3 style="text-align: center; border-bottom: black solid 1px;">Edit post <span style="float: right;">
+          <a onclick="closeEdit('{{post.id}}')" style="border: none; border-radius: 15px;"><i
+              class="fa-solid fa-xmark"></i></a></span></h3>
+  
+      <img src="/static/fb.webp" width="40" height="40" /><span style="display: inline-block;">{{user.username}}</span>
+      <textarea style="border: none;resize: none;" type="text" name="content" rows="6"
+        cols="50">{{post.content}}</textarea>
+      <button type="submit" class="btn1 btn-primary">Post</button>
+    </form>
+    <script>
+      function openEdit(id) {
+          let temp = id.toString()
+          let formID = 'myEditForm-'+temp 
+          document.getElementById(formID).style.display = "block";
+      }
+      
+      function closeEdit(id) {
+        let temp = id.toString();
+          let formID = 'myEditForm-'+temp; 
+          document.getElementById(formID).style.display = "none";
+      }
+  </script>
+  </div>

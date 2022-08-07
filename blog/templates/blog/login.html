@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Facebook by FX</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+</head>
+
+<body>    
+    <style>
+        body {
+            padding-left: 15px;
+        }
+    </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css'%}"/>
+    
+    
+    <div class="login-fb">
+      <div class="info">
+        <div class="image">
+          <img src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg">
+        </div>
+        {% if message%}
+        <p>{{message}}</p>
+        {% endif %}
+        <form method="POST" action="">
+          {% csrf_token %}
+          <input name="email" type="email" placeholder="Email" required>
+          <p class="text"></p>
+          <input name="password" type="password" placeholder="Password" required>
+          <input name="subm" type="submit" value="Log in">
+          <a href="" name="forgot">Forgotten Password?</a>
+          <div class="new">
+            <a href="{% url 'register'%}"><p>Create New Account</p></a>
+          </div>
+        </form>
+      </div>
+  
+</body>
+
+</html>

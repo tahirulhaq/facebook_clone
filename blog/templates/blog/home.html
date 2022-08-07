@@ -1,0 +1,172 @@
+{% extends 'main.html'%}
+{% block content%}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<div class="container-fb">
+    <!-- Left Side Div -->
+    <div class="left-section">
+        <a href="{% url 'viewProfile' user.username %}">
+            {{user.first_name}} {{user.last_name}}
+        </a><br>
+        <a href="/friends"> Friends</a>
+        <p> Groups</p>
+        <p> Friends</p>
+        <p> Marketplace</p>
+        <p> Groups</p>
+        <p> Friends</p>
+        <p> Marketplace</p>
+        <p> Groups</p>
+        <p> Friends</p>
+    </div>
+
+    <!-- Blog Section -->
+    <div class="blog-section">
+        {% include 'post/popup_form.html' %}
+        <div class="post-container" id="postdiv">
+            {% for post in posts %}
+            <p><a href="{% url 'viewProfile' post.author%}">{{post.author}} </a><span style="color: silver;">--
+                    {{post.created_on}}</span></p>
+
+            <p>{{post.content}}</p>
+            <div>
+                {% include 'post/like_section.html' %}
+            </div>
+            {% if request.user == post.author%}
+            <div>
+                {% include 'post/edit_popup.html' %}
+            </div>
+            {% endif %}
+            <br><br>
+
+            <!-- Comment and Reply sections added here -->
+
+            <div class="comment-wrapper">
+                <h5 style="margin-left: 30px;">Comments</h5>
+                {% for comment in comments%}
+                <div style="margin-left: 30px;">
+                    {%if comment.post.id == post.id %}
+                    <small>@
+                        <a href="{% url 'viewProfile' comment.user%}">{{comment.user}} </a> </small>
+                    <span>{{comment.body}}
+                    </span>
+                    <br>
+                    {% if request.user == comment.user%}
+                    <a href="{% url 'delete-comment' comment.id %}">Delete</a>
+                    <a style="color: #007bff;" onclick="openReply()">Reply</a>
+                    <span style="font-size: 10px;">{{comment.created |timesince}} ago</span>
+                    {% endif%}
+                    <br><br>
+                    {%endif%}
+
+                    <!-- <h5>Replies</h5> -->
+                    <!-- Replies will be displayed here -->
+                    
+                    <div style="margin-left:40px;">
+                        {% for reply in replies%}
+                        {%if reply.comment.id == comment.id and comment.post.id == post.id %}
+                        <h4>Replies</h4>
+                        <span>@<a href="{% url 'viewProfile' reply.user%}">{{reply.user}}</a>
+                            {{reply.description}}</span>
+                        {% if request.user == reply.user%}
+                        <a href="{% url 'delete-reply' reply.id %}">Delete</a>
+                        {% endif%}
+                        <br>
+                        {%endif%}
+                        {%endfor%}
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <!-- create Reply Section here -->
+                    <div id="reply-div" style="display: none;margin-left: 30px;">
+                        <form action="{% url 'create-reply' comment.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" name='description' placeholder="Enter Reply here" />
+                            <input type="submit" value="Reply">
+                        </form>
+                    </div>
+                    <br>
+                    {% endif %}
+
+
+                    <!-- Reply section ends here -->
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if request.user.is_authenticated %}
+            <div class="comment-form">
+                <form method="POST" action="{% url 'create-comment' post.id %}">
+                    {% csrf_token %}
+                    <span><a href="{% url 'viewProfile' user%}">{{user}}</a> </span><input type="text" name="body"
+                        placeholder="Write your comment here..." />
+                </form>
+            </div>
+            {% endif %}
+            <hr>
+            {% endfor %}
+            <!-- Right Side Div -->
+
+            <div class="right-section">
+                <a href="/friends/friend-requests"> Friend Requests</a>
+                <p> Marketplace</p>
+                <p> Groups</p>
+                <p> Friends</p>
+                <p> Marketplace</p>
+                <p> Groups</p>
+                <p> Friends</p>
+                <p> Marketplace</p>
+                <p> Groups</p>
+                <p> Friends</p>
+                <p> Marketplace</p>
+                <p> Groups</p>
+            </div>
+
+        </div> <!-- container div  -->
+
+        <script type="text/javascript">
+            $(document).ready(function (event) {
+                $(document).on('click', '#like', function (event) {
+                    event.preventDefault();
+                    var pk = $(this).attr('value');
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url "like_post" %}',
+                        data: {
+                            'id': pk,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        datatype: 'json',
+                        success: function (response) {
+                            $('#like-section' + pk).html(response['form'])
+
+                        },
+                        error: function (rs, e) {
+                            console.log(rs.responseText);
+                        },
+                    });
+                });
+            });
+        </script>
+        <script>
+            // function openEdit() {
+            //     // let temp = id.toString()
+            //     // let form = 'myEditForm-'+temp 
+            //     document.getElementById('myEditForm').style.display = "block";
+            // }
+            
+            // function closeEdit() {
+            //     document.getElementById("myEditForm").style.display = "none";
+            // }
+            function openReply() {
+                document.getElementById("reply-div").style.display = "block";
+            }
+            function openForm() {
+                document.getElementById("myForm").style.display = "block";
+            }
+
+
+            function closeForm() {
+                document.getElementById("myForm").style.display = "none";
+            }
+        </script>
+
+        {% endblock content %}

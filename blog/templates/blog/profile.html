@@ -1,0 +1,64 @@
+{% extends 'main.html'%}
+
+{% block content%}
+
+<div style="display: flex; align-items: center;"><h1> View your Profile Here </h1> &nbsp; &nbsp;
+    <!-- Change Privacy -->
+{% if request.user == user%}
+    {% if is_private %}
+    <a href="{% url 'change-privacy' user.id%}">Make-Profile-Public</a>
+    {%else%}
+    <a href="{% url 'change-privacy' user.id%}">Make-Profile-Private</a>
+    {%endif%}
+{%endif%}
+</div>
+<h4>{{user.first_name}}</h4>
+{%if is_blocked_by_user == True%}
+    <p>You have been blocked by the user</p>
+{%else%}
+    {% if request.user != user %}
+        {% if request.user in friends %}
+        <p>you are friends</p>
+        {% elif fr_sent %}
+            <p>Friend Request already sent</p>
+            <a href="">Cancel Request</a>
+        {% endif %}
+        {% if is_blocked_by_you %}
+        <p>You have blocked this user. You cannot View Profile
+        </p>
+        <a href="{% url 'unblock-user' user.id %}">Unblock User</a>
+        {%else%}
+        {% if not request.user in friends %}
+        <a href="{% url 'send-request' user.id %}">Add Friend</a> <br>
+        {%endif%}
+        <a href="{% url 'block-user' user.id %}">Block User</a>
+        {% endif%}
+    {% endif %}
+{% endif %}
+
+<!-- who will view posts -->
+<!-- if user profile is public anyone can view -->
+<!-- if user is private only friends can view -->
+<!-- provided users are not blocekd by each other -->
+{%if request.user == user%}
+    {% for post in posts %}
+        <p><a href="{% url 'viewProfile' post.author%}">{{post.author}} </a><span style="color: silver;">--
+            {{post.created_on}}</span></p>
+        <p>{{post.content}}</p>
+    {% endfor%}
+{%else%}
+    {% if is_private and request.user in friends or not is_private%}
+        {%if not is_blocked_by_you and not is_blocked_by_you%}
+            {% for post in posts %}
+            <p><a href="{% url 'viewProfile' post.author%}">{{post.author}} </a><span style="color: silver;">--
+                {{post.created_on}}</span></p>
+            <p>{{post.content}}</p>
+            {% endfor%}
+        {%elif not is_blocked_by_you or not is_blocked_by_you%}
+        <p>the user profile is private and you are not friend</p>
+        {%endif%}
+    {%endif%}
+{%endif%}
+
+
+{% endblock content%}
